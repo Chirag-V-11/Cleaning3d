@@ -1238,6 +1238,10 @@ body {
   margin: 0 auto 36px auto;
 }
 
+.cta-final-section {
+  padding-bottom: clamp(220px, 32vh, 340px);
+}
+
 /* --------------------------------------------------------------------------
    FOOTER
    -------------------------------------------------------------------------- */
@@ -1246,7 +1250,7 @@ body {
   padding: 70px 0 36px 0;
   background: var(--c-surface);
   position: relative;
-  z-index: 2;
+  z-index: 0;
 }
 
 .footer-grid {
@@ -1876,6 +1880,10 @@ select.form-control option {
   }
 
   /* CTA Box */
+  .cta-final-section {
+    padding-bottom: clamp(160px, 24vh, 240px);
+  }
+
   .cta-box {
     padding: 36px 20px;
   }

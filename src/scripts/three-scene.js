@@ -42,6 +42,7 @@ class CleaningScene {
     this.vacuumContainer = new THREE.Group();
     this.scene.add(this.vacuumContainer);
 
+    this.footerEl = document.querySelector('.footer');
     this.viewport = this.getViewportMetrics();
 
     this.initLights();
@@ -69,7 +70,34 @@ class CleaningScene {
     const aspectScale = THREE.MathUtils.clamp(aspect / 1.35, 0.52, 1.14);
     const baseScale = Math.min(viewportScale, aspectScale * 1.12);
 
-    return { w, h, aspect, visibleWidth, visibleHeight, baseScale };
+    const footerHeight = this.footerEl ? this.footerEl.offsetHeight : 360;
+    const navHeight = w <= 768 ? 68 : 78;
+    const visibleFooterH = Math.min(footerHeight, h * 0.52);
+    const bandBottomPx = Math.max(navHeight + 160, h - visibleFooterH);
+    const bandMidPx = (navHeight + bandBottomPx) * 0.5;
+    const bandHeightPx = Math.max(160, bandBottomPx - navHeight);
+
+    const endZ = aspect < 1.08 ? -0.35 : 0.25;
+    const endVisibleHeight = 2 * Math.tan(vFov / 2) * (this.camera.position.z - endZ);
+    const footerStageY = aspect < 1.08
+      ? visibleHeight * 0.14
+      : ((h * 0.5 - bandMidPx) / h) * endVisibleHeight;
+    const availWorldH = (bandHeightPx / h) * endVisibleHeight;
+    const footerStageScale = aspect < 1.08
+      ? baseScale * 0.96
+      : Math.max(baseScale * 0.58, Math.min(baseScale * 0.96, (availWorldH * 0.82) / 2.9));
+
+    return {
+      w,
+      h,
+      aspect,
+      visibleWidth,
+      visibleHeight,
+      baseScale,
+      footerStageY,
+      footerStageZ: endZ,
+      footerStageScale,
+    };
   }
 
   initLights() {
@@ -361,15 +389,15 @@ class CleaningScene {
       },
       {
         stop: 0.80,
-        pos: [0.0, -0.12, isNarrow ? -1.15 : -0.7],
+        pos: [0.0, -0.05, isNarrow ? -1.1 : -0.6],
         rot: [0.25, 2.6, -0.1],
         scale: s * 0.9,
       },
       {
         stop: 1.0,
-        pos: [0.0, isNarrow ? 0.28 : 0.05, isNarrow ? -0.45 : 0.35],
+        pos: [0.0, vp.footerStageY, vp.footerStageZ],
         rot: [0.08, 0.0, 0.0],
-        scale: s * 1.08,
+        scale: vp.footerStageScale,
       },
     ];
 
