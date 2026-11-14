@@ -14,11 +14,12 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
  * Easily customize branding, colors, particle count, model path, and timings.
  */
 export const CINEMATIC_CONFIG = {
-  // Brand name to reveal in large bold typography
-  brandName: "ORELLANA'S",
+  // Brand name lines to reveal in large bold typography
+  brandName1: "BRAZILIAN",
+  brandName2: "CLEANING",
 
   // Tagline appearing beneath the headline
-  tagline: "METICULOUS CLEANING WITH UNCOMPROMISING STANDARDS",
+  tagline: "KEEPING YOUR SPACE PERFECT CLEAN",
 
   // Target anchor for entering the site
   enterUrl: "#hero",
@@ -64,7 +65,12 @@ export class CinematicIntro {
     if (!this.overlay || !this.canvas) return;
 
     // Apply config content
-    if (this.brandTitle) this.brandTitle.textContent = this.config.brandName;
+    const b1 = this.config.brandName1 || "BRAZILIAN";
+    const b2 = this.config.brandName2 || "CLEANING";
+
+    if (this.brandTitle) {
+      this.brandTitle.innerHTML = `<span class="splash-brand-line">${b1}</span><span class="splash-brand-line">${b2}</span>`;
+    }
     if (this.brandTagline) this.brandTagline.textContent = this.config.tagline;
     if (this.enterBtn) {
       this.enterBtn.setAttribute('href', this.config.enterUrl);
@@ -679,27 +685,27 @@ export class CinematicIntro {
         const force = (1 - dist / radius) * strength;
 
         // Radial outward repulsion push
-        velocities[i3]     += (dx / dist) * force * 0.09;
+        velocities[i3] += (dx / dist) * force * 0.09;
         velocities[i3 + 1] += (dy / dist) * force * 0.09;
         velocities[i3 + 2] += (dz / dist) * force * 0.09;
 
         // Swirl / wake vortex torque
         velocities[i3 + 1] += Math.sin(dx * 2.5) * force * 0.05;
-        velocities[i3]     += -Math.sin(dy * 2.5) * force * 0.03;
+        velocities[i3] += -Math.sin(dy * 2.5) * force * 0.03;
       }
 
       // 3. Elastic spring return to drift position
-      velocities[i3]     += (targetX - px) * 0.032;
+      velocities[i3] += (targetX - px) * 0.032;
       velocities[i3 + 1] += (targetY - py) * 0.032;
       velocities[i3 + 2] += (targetZ - pz) * 0.032;
 
       // Damping
-      velocities[i3]     *= 0.89;
+      velocities[i3] *= 0.89;
       velocities[i3 + 1] *= 0.89;
       velocities[i3 + 2] *= 0.89;
 
       // Integration
-      positions[i3]     += velocities[i3];
+      positions[i3] += velocities[i3];
       positions[i3 + 1] += velocities[i3 + 1];
       positions[i3 + 2] += velocities[i3 + 2];
     }
